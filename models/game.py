@@ -5,10 +5,11 @@ class element:
         self.desiredX = x
         self.desiredY = y
         self.sign = sign
-    def isCorrect(self):
-        if self.actualX == self.desiredX and self.actualY == self.desiredY:
-            return True
-        return False
+
+def is_element_correct(el):
+    if el.actualX == el.desiredX and el.actualY == el.desiredY:
+        return True
+    return False
 
 def move_up_element(el):
     return element(el.desiredX, el.desiredY, el.sign, el.actualX, el.actualY - 1)
@@ -30,60 +31,12 @@ class game_state:
         self.board = generate_board(size) if board is None else board
         self.moves_count = 0 if moves_count is None else moves_count
 
-class game:
-    def __init__(self, game_id, size):
-        self.game_id = game_id
-        self.size = size
-        self.board = generate_board(size)
-        self.movesCount = 0
-
-    def isSolved(self):
-        for row in self.board:
-            for element in row:
-                if not element.isCorrect:
-                    return false
-        return true
-
-    def move_up1(self, x): pass
-       # self.movesCount, self.board = move_up(self.board, x, self.movesCount, self.size)
-        #self.movesCount += 1
-        #tmp = self.board[0][x]
-        #tmp.actualY = size - 1
-        #for i in range(1, self.size):
-        #    self.board[i][x].actualY -= 1
-        #    self.board[i - 1][x] = self.board[i][x]
-
-        #self.board[self.size - 1][x] = tmp
-
-    def move_down(self, x):
-        self.movesCount += 1
-        tmp = self.board[self.size - 1][x]
-        tmp.actualY = 0
-        for i in reversed(range(self.size - 1)):
-            self.board[i][x].actualY += 1
-            self.board[i + 1][x] = self.board[i][x]
-
-        self.board[0][x] = tmp
-
-    def move_right(self, y):
-        self.movesCount += 1
-        tmp = self.board[y][self.size - 1]
-        tmp.actualX = 0
-        for i in reversed(range(self.size - 1)):
-            self.board[y][i].actualX += 1
-            self.board[y][i + 1] = self.board[y][i]
-
-        self.board[y][0] = tmp
-
-    def move_left(self, y):
-        self.movesCount += 1
-        tmp = self.board[y][0]
-        tmp.actualX = self.size - 1
-        for i in range(1, self.size):
-            self.board[y][i].actualX -= 1
-            self.board[y][i - 1] = self.board[y][i]
-
-        self.board[y][self.size - 1] = tmp
+def is_game_solved(state):
+    for row in state.board:
+        for el in row:
+            if not is_correct(el):
+                return false
+    return true
 
 def move_up(state, x):
     updated_board = [list(
@@ -96,6 +49,33 @@ def move_up(state, x):
         updated_board[i - 1][x] = updated_board[i][x]
 
     updated_board[state.size - 1][x] = lastElement
+    return game_state(state.game_id, state.size, updated_board, state.moves_count + 1)
+
+def move_down(state, x):
+    updated_board = [list(
+        map(lambda el: move_down_element(el) if el.actualX == x else el, row)
+    ) for row in state.board]
+    tmp = updated_board[state.size - 1][x]
+    firstElement = element(tmp.desiredX, tmp.desiredY, tmp.sign, tmp.actualX, 0)
+    #no idea here for immutable
+    for i in reversed(range(state.size - 1)):
+        updated_board[i + 1][x] = updated_board[i][x]
+
+    updated_board[0][x] = firstElement
+    return game_state(state.game_id, state.size, updated_board, state.moves_count + 1)
+
+def move_right(state, y):
+    updated_row = list(map(lambda el: move_right_element(el), state.board[y]))
+    moved_row = [updated_row[state.size - 1]] + updated_row[:state.size - 1]
+    updated_board = state.board
+    updated_board[y] = moved_row
+    return game_state(state.game_id, state.size, updated_board, state.moves_count + 1)
+
+def move_left(state, y):
+    updated_row = list(map(lambda el: move_left_element(el), state.board[y]))
+    moved_row = updated_row[1:] + [updated_row[0]]
+    updated_board = state.board
+    updated_board[y] = moved_row
     return game_state(state.game_id, state.size, updated_board, state.moves_count + 1)
 
 def generate_board(size):
