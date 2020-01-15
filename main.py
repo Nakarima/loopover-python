@@ -5,9 +5,9 @@ app = Flask(__name__)
 
 @app.route('/')
 def solve():
-    g = game(0, 5)
-    g.move_left(0)
-    g.move_right(1)
+    #g = game(0, 5)
+    #g.move_up1(0)
+    #g.move_right(1)
 
     name = request.args.get("name", "World")
-    return render_template("game.html", game=g)
+    return render_template("game.html", game=move_up(game_state(0, 5), 0))
