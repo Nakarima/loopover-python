@@ -3,11 +3,12 @@ from models.game import *
 
 app = Flask(__name__)
 
+g = game_state(0,5)
+
 @app.route('/')
 def solve():
-    #g = game(0, 5)
-    #g.move_up1(0)
-    #g.move_right(1)
-
+    global g
+    g = move_left(g, 0)
+    print(is_game_solved(g))
     name = request.args.get("name", "World")
-    return render_template("game.html", game=move_left(game_state(0, 5), 0))
+    return render_template("game.html", game=g)
