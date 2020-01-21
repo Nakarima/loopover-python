@@ -3,16 +3,32 @@
 <body>
 	
 </body>
+<form style="margin: 0 auto" action="" method="post" >
+	<div style="margin-left:50px">
+		{% for index in range(game.size) %}
+		<button name="up" type="submit" value="{{index}}" style = "display:inline-block; height: 50px; width:50px"> up </button>
+		{% endfor %}
+	</div>
 	<div>
 		{% for row in game.board %}
 			<div>
+				<button name="left" type = "submit" value = "{{loop.index - 1}}" style = "display:inline-block; height: 50px; width:50px"> left </button>
 				{% for element in row %}
 				<p style = "display:inline-block; height:50px; width:50px;
 				background-color:grey;">
-					{{ element.sign }}/{{ element.actualY }}
+					{{ element.sign }}
 				</p>
 				{% endfor %}
+				<button name = "right" type = submit value = "{{loop.index - 1}}" style = "display:inline-block; height: 50px; width:50px"> right </button>
 			</div>
 		{% endfor %}
 	</div>
+	<div style="margin-left:50px">
+		{% for index in range(game.size) %}
+		<button name = "down" type = "submit" value = "{{index}}" style = "display:inline-block; height: 50px; width: 50px"> down </button>
+		{% endfor %}
+	</div>
+	<p>{{ game.moves_count }}</p>
+</form>
+</body>
 </html>

@@ -5,7 +5,7 @@ class game_state:
     def __init__(self, game_id, size, board = None, moves_count = None):
         self.game_id = game_id
         self.size = size
-        self.board = generate_board(size) if board is None else board
+        self.board = create_scrambled_board(size) if board is None else board
         self.moves_count = 0 if moves_count is None else moves_count
 
 def is_game_solved(state):
@@ -59,3 +59,16 @@ def generate_board(size):
             sign += 1
 
     return board
+
+def create_scrambled_board(size):
+    return shuffle(generate_board(size), size)
+
+import random
+
+def shuffle(board, size, rand=random):
+    moves = [move_up, move_left, move_down, move_right]
+    tmp_state = game_state(-1, size, board)
+    for i in range(80):
+        tmp_state = moves[random.randint(0, 3)](tmp_state, random.randint(0, size - 1))
+
+    return tmp_state.board
