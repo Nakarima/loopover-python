@@ -2,7 +2,7 @@ from functools import reduce
 from models.element import *
 
 class game_state:
-    def __init__(self, game_id, size, board = None, moves_count = None):
+    def __init__(self, game_id, size = 5, board = None, moves_count = None):
         self.game_id = game_id
         self.size = size
         self.board = create_scrambled_board(size) if board is None else board

@@ -7,16 +7,14 @@ games = []
 
 @app.route('/')
 def menu():
-    global games
-    games.append(game_state(len(games), 5))
-    return render_template("index.html")
+    return render_template("index.html", id=len(games))
 
 @app.route('/game/<int:game_id>', methods=['GET', 'POST'])
 def solve(game_id):
     global games
-    if is_game_solved(games[game_id]):
-        return redirect('/win', moves = games[game_id].moves_count)
     if request.method == 'POST':
+        if request.form.get('size') is not None:
+            games.append(game_state(len(games), int(request.form['size'])))
         tmp = games[game_id]
         if request.form.get('up'):
             tmp = move_up(tmp, int(request.form['up']))
@@ -27,4 +25,6 @@ def solve(game_id):
         elif request.form.get('right') is not None:
             tmp = move_right(tmp, int(request.form['right']))
         games[game_id] = tmp
+    if is_game_solved(games[game_id]):
+        return render_template('win.html', moves = games[game_id].moves_count)
     return render_template("game.html", game=games[game_id])

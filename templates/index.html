@@ -1,7 +1,12 @@
 <html>
 
 	<body>
-		<a href="/game/0">nowa gra</a>
+		<h1>Loopover in python</h1>
+		<form action="/game/{{ id }}" method="post">
+			Size of board:
+			<input required name = "size" type="number" min = "3" max = "10">
+			<button type = "submit">new game</button>
+		</form>
 	
 	</body>
 
