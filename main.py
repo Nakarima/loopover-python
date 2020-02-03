@@ -14,7 +14,10 @@ def solve(game_id):
     global games
     if request.method == 'POST':
         if request.form.get('size') is not None:
-            games.append(game_state(len(games), int(request.form['size'])))
+            tmp_size = int(request.form['size'])
+            if tmp_size < 3 or tmp_size > 15:
+                tmp_size = 3
+            games.append(game_state(len(games), tmp_size))
         tmp = games[game_id]
         if request.form.get('up'):
             tmp = move_up(tmp, int(request.form['up']))
